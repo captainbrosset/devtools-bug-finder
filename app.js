@@ -100,7 +100,7 @@ function getSearchParams(options) {
 
   var params = {
     // Search only devtools bugs.
-    "product": "Firefox",
+    "product": "DevTools",
     "component": [],
     // Opened bugs only.
     "bug_status": ["NEW", "REOPENED", "UNCONFIRMED"],
@@ -483,7 +483,7 @@ function displayTopContributors(rootEl) {
 
   var options = {
     // Search only devtools bugs.
-    "product": "Firefox",
+    "product": "DevTools",
     "component": getBugzillaComponents("all"),
     // Only bugs assigned to someone.
     "email1": "nobody",

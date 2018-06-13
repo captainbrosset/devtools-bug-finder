@@ -18,7 +18,7 @@ var bugzilla = bz.createClient({url: "https://bugzilla.mozilla.org/bzapi"});
 
 function searchForUntriagedBugs(cb) {
   var options = {
-    "product": "Firefox",
+    "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary", "assigned_to"],
@@ -34,7 +34,7 @@ function searchForUntriagedBugs(cb) {
 
 function searchForBugsBackForReTriage(cb) {
   var options = {
-    "product": "Firefox",
+    "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary"],
@@ -48,7 +48,7 @@ function searchForBugsBackForReTriage(cb) {
 
 function searchForP1s(cb) {
   var options = {
-    "product": "Firefox",
+    "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary", "assigned_to", "whiteboard", "severity",
@@ -68,7 +68,7 @@ function searchForP1s(cb) {
 function searchForTopBugs(cb) {
   bugzilla.getBug(`top-${tool}-bugs`, function(_, bug) {
     var options = {
-      "product": "Firefox",
+      "product": "DevTools",
       "component": components,
       "bug_status": ["NEW", "REOPENED"],
       "include_fields": ["id", "summary", "assigned_to"],
@@ -83,7 +83,7 @@ function searchForTopBugs(cb) {
 
 function searchForTopIntermittents(cb) {
   var options = {
-    "product": "Firefox",
+    "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "REOPENED"],
     "include_fields": ["id", "summary", "priority", "assigned_to"],
