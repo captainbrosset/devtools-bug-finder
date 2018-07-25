@@ -22,7 +22,8 @@ function searchForUntriagedBugs(cb) {
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
     "include_fields": ["id", "summary", "assigned_to"],
-    "priority": ["--"]
+    "priority": ["--"],
+    "severity": ["blocker", "critical", "major", "normal", "minor", "trivial"]
   };
 
   bugzilla.searchBugs(options, function(_, untriagedList) {
