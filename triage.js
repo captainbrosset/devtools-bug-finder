@@ -2,6 +2,8 @@
 
 let tool = "inspector";
 let components = COMPONENT_MAPPING[tool].components;
+// We also want to triage RDM when triaging inspector bugs:
+components.push("Responsive Design Mode");
 
 for (let [key, value] of new URL(document.location).searchParams.entries()) {
   if (key === "tool" && COMPONENT_MAPPING[value]) {
