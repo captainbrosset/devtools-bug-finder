@@ -8,7 +8,8 @@ var COMPONENT_MAPPING = {
                  "Computed Styles Inspector",
                  "Font Inspector",
                  "Animation Inspector",
-                 "Style Editor"]
+                 "Style Editor",
+                 "Responsive Design Mode"]
   },
   "console": {
     label: "Web Console",
