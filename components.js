@@ -48,10 +48,6 @@ var COMPONENT_MAPPING = {
     label: "about:debugging",
     components: ["about:debugging"]
   },
-  "gcli": {
-    label: "Command Line",
-    components: ["Graphic Commandline and Toolbar"]
-  },
   "scratchpad": {
     label: "Scratchpad",
     components: ["Scratchpad"]
