@@ -66,20 +66,44 @@ function searchForP1s(cb) {
   });
 }
 
-function searchForTopBugs(cb) {
-  bugzilla.getBug(`top-${tool}-bugs`, function(_, bug) {
-    var options = {
-      "product": "DevTools",
-      "component": components,
-      "bug_status": ["NEW", "REOPENED"],
-      "include_fields": ["id", "summary", "assigned_to"],
-      "id": bug.depends_on
-    };
+function searchForInspectorDTQBugs(cb) {
+  var options = {
+    "product": "DevTools",
+    "component": components,
+    "bug_status": ["NEW", "REOPENED"],
+    "include_fields": ["id", "summary", "assigned_to", "priority", "whiteboard"],
+    "whiteboard": ["[dt-q"]
+  };
 
-    bugzilla.searchBugs(options, function(_, list) {
-      cb(list);
-    });
+  bugzilla.searchBugs(options, function(_, list) {
+    cb(list);
   });
+}
+
+function searchForTopBugs(cb) {
+  // The inspector/style-editor/rdm team started using a new keyword for tracking top
+  // quality bugs: [dt-q]. So if tool is inspector, let's look for that instead.
+  if (tool === "inspector") {
+    searchForInspectorDTQBugs(cb);
+  } else {
+    bugzilla.getBug(`top-${tool}-bugs`, function(_, bug) {
+      if (!bug) {
+        cb([]);
+      }
+
+      var options = {
+        "product": "DevTools",
+        "component": components,
+        "bug_status": ["NEW", "REOPENED"],
+        "include_fields": ["id", "summary", "assigned_to"],
+        "id": bug.depends_on
+      };
+
+      bugzilla.searchBugs(options, function(_, list) {
+        cb(list);
+      });
+    });
+  }
 }
 
 function searchForTopIntermittents(cb) {
@@ -87,8 +111,8 @@ function searchForTopIntermittents(cb) {
     "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "REOPENED"],
-    "include_fields": ["id", "summary", "priority", "assigned_to"],
-    "priority": ["P1", "P2"],
+    "include_fields": ["id", "summary", "assigned_to", "whiteboard"],
+    "whiteboard": ["[stockwell needswork]"],
     "keywords": ["intermittent-failure"]
   };
 

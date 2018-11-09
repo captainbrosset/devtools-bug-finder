@@ -1,3 +1,7 @@
+body {
+  display: initial;
+}
+
 main {
   /* Increase the margin on the right to allow the user to scroll the main container
      since bug lists can also be scrollable */
