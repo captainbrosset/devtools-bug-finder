@@ -3,18 +3,17 @@
 // Name of devtools mozilla staff.
 var STAFF = [
   "pbrosset", "vporof", "jlong", "poirot.alex", "bgrinstead", "nfitzgerald", "jdescottes",
-  "jryans", "odvarko", "clarkbw", "jlaster", "hholmes", "ttromey", "jsantell", "gl",
-  "lclark", "janx", "ejpbruel", "mratcliffe", "gtatum", "jwalker", "zer0", "past",
-  "jfong", "mihai.sucan", "paul", "fayearthur", "anton", "dcamp", "jimb", "bbenvie",
-  "rcampbell", "dtownsend", "yzenevich", "erahm", "kumar.mcmillan", "gasolin", "npang",
-  "amarchesini", "dbaron", "bzbarsky", "winter2718", "terrence", "bchabod", "mvonbriesen",
-  "jaideepb", "rchien", "bkelly", "matt.woodrow", "fscholz", "efaustbmo", "ydelendik",
-  "francesco.lodolo", "jyeh", "philipp", "schung", "evan", "lgreco", "gkrizsanits",
-  "birtles", "myk", "pascalc", "mats", "gbrown", "mstriemer", "sole", "padenot",
-  "aryx.bugmail", "nchevobbe", "dakatsuka", "jwatt", "rhelmer", "mrbkap", "mstange",
-  "bhsu", "ckerschb", "ystartsev", "dwalsh", "jteh", "emilio", "dao+bmo", "standard8",
-  "jaws", "mconley", "kmag", "mantaroh", "rcaliman", "davidwalsh83", "bbirtles",
-  "nicolas.b.pierron"
+  "odvarko", "clarkbw", "jlaster", "gl", "lclark", "mratcliffe", "gtatum", "jwalker",
+  "past", "paul", "dcamp", "jimb", "dtownsend", "yzenevich", "erahm", "kumar.mcmillan",
+  "npang", "amarchesini", "dbaron", "bzbarsky", "winter2718", "terrence", "mvonbriesen",
+  "bkelly", "matt.woodrow", "fscholz", "efaustbmo", "ydelendik", "francesco.lodolo",
+  "jyeh", "philipp", "schung", "evan", "lgreco", "gkrizsanits", "birtles", "myk",
+  "pascalc", "mats", "gbrown", "mstriemer", "sole", "padenot", "aryx.bugmail",
+  "nchevobbe", "dakatsuka", "jwatt", "rhelmer", "mrbkap", "mstange", "bhsu", "ckerschb",
+  "ystartsev", "dwalsh", "jteh", "emilio", "dao+bmo", "standard8", "jaws", "mconley",
+  "kmag", "mantaroh", "rcaliman", "davidwalsh83", "bbirtles", "nicolas.b.pierron",
+  "bhackett1024", "mcroud", "balbeza", "bwerth", "ogasidlo", "mgoodwin", "spenades",
+  "mtigley", "canaltinova"
 ];
 
 // URL prefix to open a bug in bugzilla.
