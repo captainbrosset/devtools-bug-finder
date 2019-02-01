@@ -4,10 +4,12 @@ var COMPONENT_MAPPING = {
   "inspector": {
     label: "Inspector",
     components: ["Inspector",
-                 "CSS Rules Inspector",
-                 "Computed Styles Inspector",
-                 "Font Inspector",
-                 "Animation Inspector",
+                 "Inspector: Animations",
+                 "Inspector: Changes",
+                 "Inspector: Computed",
+                 "Inspector: Fonts",
+                 "Inspector: Layout",
+                 "Inspector: Rules",
                  "Style Editor",
                  "Responsive Design Mode"]
   },
