@@ -265,6 +265,11 @@ header .links li:first-child {
   opacity: 0.65;
 }
 
+.bug .tag.type {
+  background: #ff9326;
+  border-color: #ff8700;
+}
+
 .bug .tag.mentor {
   border-color: #8cc6c6;
   background: #bef8f8;

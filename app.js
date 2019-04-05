@@ -112,7 +112,8 @@ function getSearchParams(options) {
                        "component",
                        "keywords",
                        "mentors",
-                       "attachments"],
+                       "attachments",
+                       "type"],
     // List of keywords to search for.
     "keywords": []
   };
@@ -339,6 +340,14 @@ function createBugMarkup(bug) {
       textContent: getToolLabel(bug.component)
     }));
   }
+
+  el.appendChild(createNode({
+    attributes: {
+      "class": "tag type",
+      "title": `This is a ${bug.type}`
+    },
+    textContent: bug.type
+  }));
 
   if (bug.mentors) {
     el.appendChild(createNode({
