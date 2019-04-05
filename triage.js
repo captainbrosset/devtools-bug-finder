@@ -1,113 +1,88 @@
 "use strict";
 
-let tool = "inspector";
-let components = COMPONENT_MAPPING[tool].components;
+let TOOL = "inspector";
+let components = COMPONENT_MAPPING[TOOL].components;
 
-for (let [key, value] of new URL(document.location).searchParams.entries()) {
+for (const [key, value] of new URL(document.location).searchParams.entries()) {
   if (key === "tool" && COMPONENT_MAPPING[value]) {
-    tool = value;
+    TOOL = value;
     components = COMPONENT_MAPPING[value].components;
   }
 }
 
-const pageTitle = `${tool} bug triage dashboard`;
+const pageTitle = `${TOOL} bug triage dashboard`;
+
 document.querySelector("h1").textContent = pageTitle;
 document.title = pageTitle;
 
-var bugzilla = bz.createClient({url: "https://bugzilla.mozilla.org/bzapi"});
+const bugzilla = bz.createClient({url: "https://bugzilla.mozilla.org/bzapi"});
 
 function searchForUntriagedBugs(cb) {
-  var options = {
+  const options = {
     "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
-    "include_fields": ["id", "summary", "assigned_to"],
+    "include_fields": ["id", "summary", "assigned_to", "attachments"],
     "priority": ["--"],
-    "severity": ["blocker", "critical", "major", "normal", "minor", "trivial"]
+    "type": ["defect", "task"]
   };
 
-  bugzilla.searchBugs(options, function(_, untriagedList) {
-    searchForBugsBackForReTriage(function(backForTriageList) {
-      cb(untriagedList.concat(backForTriageList));
-    });
-  });
-}
-
-function searchForBugsBackForReTriage(cb) {
-  var options = {
-    "product": "DevTools",
-    "component": components,
-    "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
-    "include_fields": ["id", "summary"],
-    "whiteboard": "inspector-triage"
-  };
-
-  bugzilla.searchBugs(options, function(_, list) {
-    cb(list);
-  });
+  bugzilla.searchBugs(options, (_, untriagedList) => cb(untriagedList));
 }
 
 function searchForP1s(cb) {
-  var options = {
+  const options = {
     "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "ASSIGNED", "REOPENED", "UNCONFIRMED"],
-    "include_fields": ["id", "summary", "assigned_to", "whiteboard", "severity",
+    "include_fields": ["id", "summary", "assigned_to", "whiteboard",
                        "last_change_time", "attachments"],
-    "priority": ["P1"]
+    "priority": ["P1"],
+    "type": ["defect", "task"]
   };
 
-  bugzilla.searchBugs(options, function(_, list) {
-    // Filter out devtools.html bugs and enhancements
-    cb(list.filter(function(bug) {
-      return !bug.whiteboard.includes("devtools-html") &&
-             bug.severity !== "enhancement";
-    }));
-  });
+  bugzilla.searchBugs(options, (_, p1List) => cb(p1List));
 }
 
 function searchForInspectorDTQBugs(cb) {
-  var options = {
+  const options = {
     "product": "DevTools",
     "component": components,
-    "bug_status": ["NEW", "REOPENED"],
-    "include_fields": ["id", "summary", "assigned_to", "priority", "whiteboard"],
+    "bug_status": ["NEW", "ASSIGNED", "REOPENED"],
+    "include_fields": ["id", "summary", "assigned_to", "priority", "whiteboard",
+                       "attachments"],
     "whiteboard": ["[dt-q"]
   };
 
-  bugzilla.searchBugs(options, function(_, list) {
-    cb(list);
-  });
+  bugzilla.searchBugs(options, (_, dtqList) => cb(dtqList));
 }
 
 function searchForTopBugs(cb) {
-  // The inspector/style-editor/rdm team started using a new keyword for tracking top
+  // The inspector/style-editor/rdm team started using a new whiteboard for tracking top
   // quality bugs: [dt-q]. So if tool is inspector, let's look for that instead.
-  if (tool === "inspector") {
+  if (TOOL === "inspector") {
     searchForInspectorDTQBugs(cb);
   } else {
-    bugzilla.getBug(`top-${tool}-bugs`, function(_, bug) {
+    bugzilla.getBug(`top-${TOOL}-bugs`, (_, bug) => {
       if (!bug) {
         cb([]);
       }
 
-      var options = {
+      const options = {
         "product": "DevTools",
         "component": components,
-        "bug_status": ["NEW", "REOPENED"],
-        "include_fields": ["id", "summary", "assigned_to"],
+        "bug_status": ["NEW", "ASSIGNED", "REOPENED"],
+        "include_fields": ["id", "summary", "assigned_to", "attachments"],
         "id": bug.depends_on
       };
 
-      bugzilla.searchBugs(options, function(_, list) {
-        cb(list);
-      });
+      bugzilla.searchBugs(options, (_, topList) => cb(topList));
     });
   }
 }
 
 function searchForTopIntermittents(cb) {
-  var options = {
+  const options = {
     "product": "DevTools",
     "component": components,
     "bug_status": ["NEW", "REOPENED"],
@@ -116,13 +91,11 @@ function searchForTopIntermittents(cb) {
     "keywords": ["intermittent-failure"]
   };
 
-  bugzilla.searchBugs(options, function(_, list) {
-    cb(list);
-  });
+  bugzilla.searchBugs(options, (_, intermittentList) => cb(intermittentList));
 }
 
 function createBug(bug) {
-  var el = createNode({
+  const el = createNode({
     tagName: "li",
     attributes: {
       "class": "bug separated",
@@ -130,7 +103,7 @@ function createBug(bug) {
     }
   });
 
-  var titleContainer = createNode({
+  const titleContainer = createNode({
     attributes: {"class": "bug-link"}
   });
   el.appendChild(titleContainer);
@@ -176,8 +149,9 @@ function createBug(bug) {
     }));
   }
 
-  if (bug.attachments && bug.attachments.some(
-      a => a.is_patch || a.content_type == "text/x-review-board-request")) {
+  const isPatch = a => a.is_patch || a.content_type == "text/x-phabricator-request";
+
+  if (bug.attachments && bug.attachments.some(isPatch)) {
     el.appendChild(createNode({
       attributes: {
         "class": "tag has-patch",
@@ -201,8 +175,8 @@ function createBug(bug) {
 }
 
 function createBugs(bugs, el) {
-  let list = el.querySelector("ul");
-  let header = el.querySelector("h2");
+  const list = el.querySelector("ul");
+  const header = el.querySelector("h2");
 
   list.classList.remove("loading");
 
@@ -214,27 +188,25 @@ function createBugs(bugs, el) {
     header.textContent += ` (${bugs.length} bugs)`;
   }
 
-  bugs.forEach(function(bug) {
-    list.appendChild(createBug(bug));
-  });
+  bugs.forEach(bug => list.appendChild(createBug(bug)));
 }
 
-searchForUntriagedBugs(function(bugs) {
-  var el = document.querySelector(".untriaged");
+searchForUntriagedBugs(bugs => {
+  const el = document.querySelector(".untriaged");
   createBugs(bugs, el);
 });
 
-searchForP1s(function(bugs) {
-  var el = document.querySelector(".P1s");
+searchForP1s(bugs => {
+  const el = document.querySelector(".P1s");
   createBugs(bugs, el);
 });
 
-searchForTopBugs(function(bugs) {
-  var el = document.querySelector(".top-bugs");
+searchForTopBugs(bugs => {
+  const el = document.querySelector(".top-bugs");
   createBugs(bugs, el);
 });
 
-searchForTopIntermittents(function(bugs) {
-  var el = document.querySelector(".intermittents");
+searchForTopIntermittents(bugs => {
+  const el = document.querySelector(".intermittents");
   createBugs(bugs, el);
 });
