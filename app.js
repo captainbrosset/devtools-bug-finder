@@ -100,7 +100,7 @@ function getSearchParams(options) {
 
   var params = {
     // Search only devtools bugs.
-    "product": "Firefox",
+    "product": "DevTools",
     "component": [],
     // Opened bugs only.
     "bug_status": ["NEW", "REOPENED", "UNCONFIRMED"],
@@ -112,7 +112,8 @@ function getSearchParams(options) {
                        "component",
                        "keywords",
                        "mentors",
-                       "attachments"],
+                       "attachments",
+                       "type"],
     // List of keywords to search for.
     "keywords": []
   };
@@ -340,6 +341,14 @@ function createBugMarkup(bug) {
     }));
   }
 
+  el.appendChild(createNode({
+    attributes: {
+      "class": "tag type",
+      "title": `This is a ${bug.type}`
+    },
+    textContent: bug.type
+  }));
+
   if (bug.mentors) {
     el.appendChild(createNode({
       attributes: {
@@ -483,7 +492,7 @@ function displayTopContributors(rootEl) {
 
   var options = {
     // Search only devtools bugs.
-    "product": "Firefox",
+    "product": "DevTools",
     "component": getBugzillaComponents("all"),
     // Only bugs assigned to someone.
     "email1": "nobody",
@@ -555,9 +564,9 @@ function displayContributor(contributor, rootEl) {
     tagName: "a",
     attributes: {
       target: "_blank",
-      href: PROFILE_URL + contributor.key
+      href: PROFILE_URL + contributor.key + "@"
     },
-    textContent: contributor.name
+    textContent: contributor.name || contributor.key
   });
   el.appendChild(name);
 

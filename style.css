@@ -79,6 +79,7 @@ main {
   margin: 2em;
   display: flex;
   align-items: flex-start;
+  flex: 1;
 }
 
 .main ul {
@@ -134,7 +135,7 @@ header::before {
   height: 100%;
   left: 2em;
   width: 32px;
-  background: url(logo.png) no-repeat center;
+  background: url(logo.svg) no-repeat center;
 }
 
 .loading header::before {
@@ -262,6 +263,11 @@ header .links li:first-child {
 
 .dark .bug .tag {
   opacity: 0.65;
+}
+
+.bug .tag.type {
+  background: #ff9326;
+  border-color: #ff8700;
 }
 
 .bug .tag.mentor {
